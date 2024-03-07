@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Managing Drug Shortages</title>
+		<meta name="author" content="name">
+    <meta name="description" content="description here">
+		<meta name="keywords" content="keywords,here">
+		    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/> <!--Replace with your tailwind.css once created-->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" rel="stylesheet">
+	<style>
+	.smooth {transition: box-shadow 0.3s ease-in-out;}
+	::selection{background-color: aliceblue}
+	</style>
+</head>
+<body class="bg-gray-300 font-sans leading-normal tracking-normal">
+
+	<!--Nav-->
+	<nav class="bg-gray-900 p-4 mt-0 w-full">
+        <div class="container flex items-center">
+			<div class="flex pl-4 text-sm">
+				<ul class="list-reset flex justify-between flex-1 items-center">
+					<li class="mr-2">
+						<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="index.html">Home</a>
+					  </li>
+				  <li class="mr-2">
+					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="energy.html">Energy Consumption</a>
+				  </li>
+				  <li class="mr-2">
+					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="disaster.html">Drought</a>
+				  </li>
+					<li class="mr-2">
+					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="impact.html">Impact of Drought on Energy Consumption</a>
+				  </li>
+				</ul>
+			</div>
+        </div>
+	</nav>	
+	
+	<!--Title-->
+	<div class="text-center " style="padding-top: 2rem; width:1300px;">
+		<h1 class="font-bold break-normal text-5xl">Impact of Drought on Energy Consumption</h1>
+	</div>
+
+	<div class="flex">
+		<div class="flex fixed mx-1 p-4 px-8 rounded mt-4">
+			<div class="flex-col bg-white rounded">
+				<!-- <div class="my-5 mx-2 underline text-center">Energy Consumption</div> -->
+				<div class="my-5 mx-2"><a class="inline-block no-underline hover:text-gray-600 hover:text-underline text-sm" href="#alt_title">Drought and Energy Consumption</a></div>
+				<div class="my-5 mx-2"><a class="inline-block no-underline hover:text-gray-600 hover:text-underline text-sm" href="#viz1680828441816">County Drought and Emissions</a></div>
+			</div>
+		</div>
+
+		<div class="flex-col ml-72 w-full flex">		
+
+			<div class="flex-col mb-2 mt-4">
+				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">
+					<div class="pl-4 bg-white text-xl text-gray-500 pt-4" id="alt_title" style="width: 1125px;">Is there a relationship between a state's Managing Drug Shortages severity?</div>
+					<div class="pl-4 bg-white text-sm text-gray-500 justify-start py-2" style="width: 1125px;">Based on data from 2016, states that experienced worse drought levels appear to have decreased energy consumption (see California and Massachusetts for example). Click on various states below to compare the consumption for electricity, natural gas, and fuel. The line graph below indicates the drought severity for each selected state over the year, with each state highlighted (DSCI score range: 0 = no drought, 500 = extreme drought).</div>
+					<div class="" id="vis"></div>
+				</div>					
+			</div>
+
+			<div class="flex-col mb-2 mt-4">
+				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">
+					<div class='tableauPlaceholder' id='viz1680828441816' style='position: relative'><noscript><a href='#'><img alt='Dashboard 3 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;he&#47;heatmap_bargraph_county_DSCI_GHG_county_version&#47;Dashboard3&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='heatmap_bargraph_county_DSCI_GHG_county_version&#47;Dashboard3' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;he&#47;heatmap_bargraph_county_DSCI_GHG_county_version&#47;Dashboard3&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1680828441816');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1000px';vizElement.style.height='827px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+				</div>					
+			</div>
+
+			<!--<div class="flex-col mb-2 mt-4">
+				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-0 rounded" style="font-family:Georgia,serif; padding: 1rem;">
+					<div class='tableauPlaceholder' id='viz1679684196093' style='position: relative'><noscript><a href='#'><img alt='Miles Traveled and Gasoline Emission Rates by State ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Mi&#47;MilesTraveledandGasolineEmissionRates&#47;Sheet2&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='MilesTraveledandGasolineEmissionRates&#47;Sheet2' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Mi&#47;MilesTraveledandGasolineEmissionRates&#47;Sheet2&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1679684196093');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+				</div>					
+			</div>-->
+
+		</div>
+
+	</div>
+
+	<div style="margin-top: 2rem;"></div>
+	<footer class="bg-gray-900">	
+		<div class="container max-w-6xl mx-auto flex items-center px-2 py-8">
+			<div class="w-full mx-auto flex flex-wrap items-center">
+				<div class="flex w-full md:w-1/2 justify-center md:justify-start text-white font-extrabold">
+				</div>
+				<div class="flex w-full pt-2 content-center justify-between md:w-1/2 md:justify-end">
+					<ul class="list-reset flex justify-center flex-1 md:flex-none items-center">
+						<li class="mr-2">
+							<a class="inline-block text-gray-300 no-underline hover:text-gray-200 hover:underline py-2 px-2" href="data.html">Data</a>
+						</li>
+						<li class="mr-2">
+							<a class="inline-block text-gray-300 no-underline hover:text-gray-200 hover:underline py-2 px-2" href="team.html">Team</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+</body>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+<script>
+    vegaEmbed('#vis', 'spec_v2.json');
+</script>
+</html>

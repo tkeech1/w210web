@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Managing Drug Shortages</title>
+		<meta name="author" content="name">
+    <meta name="description" content="description here">
+	<meta name="keywords" content="keywords,here">
+	<!--<link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>--> <!--Replace with your tailwind.css once created-->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" rel="stylesheet">
+	<style>
+	.smooth {transition: box-shadow 0.3s ease-in-out;}
+	::selection{background-color: aliceblue}
+	</style>
+	<script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-300 font-sans leading-normal tracking-normal">
+
+	<!--Nav-->
+	<nav class="bg-gray-900 p-4 mt-0 w-full">
+        <div class="container flex items-center">
+			<div class="flex pl-4 text-sm">
+				<ul class="list-reset flex justify-between flex-1 items-center">
+					<li class="mr-2">
+						<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="index.html">Home</a>
+					  </li>
+				  <li class="mr-2">
+					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="dashboard.html">Dashboard</a>
+				  </li>
+				  <li class="mr-2">
+					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="detail.html">Drug Details</a>
+				</ul>
+			</div>
+        </div>
+	</nav>	
+	
+	<!--Title-->
+	<div class="ml-14" style="padding-top: 2rem;">
+		<h1 class="font-bold break-normal text-3xl">Drug Detail</h1>
+	</div>
+
+	<div class="flex">
+		<div class="flex-col ml-10 w-full flex">		
+
+			<div class="flex-col mt-8 mb-2 mt-4 bg-white ml-4 w-4/5 rounded-md">
+				<!--<div class="pl-4 text-xl text-gray-500 pt-4" id="dsa">Drug Detail</div>-->
+				<div class="pl-4 text-sm text-gray-500 justify-start pt-4">An explanation of what this page shows...</div>
+				<div class="pl-4 justify-start pt-4 inline-block hover:text-gray-600 hover:underline text-sm"><a href="download.html">Download Full Results</a></div>	
+				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">
+					<form>
+					<table class="table-fixed min-w-full text-left text-sm font-light">
+						<thead class="border-b font-medium bg-gray-300">
+							<tr>
+								<th scope="col" class="px-6 py-1">NDC</th>
+								<th scope="col" class="px-6 py-1">Shortage Status</th>
+								<th scope="col" class="px-6 py-1">Generic Name</th>
+								<th scope="col" class="px-6 py-1">Manufacturer</th>
+							</tr>
+							<Tr>
+								<Th class="whitespace-nowrap px-6 py-1 font-medium">
+									<input type="text" name="ndc" class="border rounded" id="filter_ndc" placeholder="Filter by NDC" 
+										hx-post="/detail.html"
+										hx-trigger="keyup changed delay:500ms"
+										hx-target="#search-results"
+										placeholder="Search..."/></Th>
+								<Th class="whitespace-nowrap px-6 py-1 font-medium">
+									<input type="text" name="shortage_status" class="border rounded" id="filter_ndc" placeholder="Filter by Shortage Status" 
+										hx-post="/detail.html"
+										hx-trigger="keyup changed delay:500ms"
+										hx-target="#search-results"
+										placeholder="Search..."/>
+								</Th>
+								<Th class="whitespace-nowrap px-6 py-1 font-medium">
+									<input type="text" name="generic_name" class="border rounded" id="filter_ndc" placeholder="Filter by Generic Name" 
+										hx-post="/detail.html"
+										hx-trigger="keyup changed delay:500ms"
+										hx-target="#search-results"
+										placeholder="Search..."/>
+								</Th>
+								<Th class="whitespace-nowrap px-6 py-1 font-medium">
+									<input type="text" name="manufacturer" class="border rounded" id="filter_ndc" placeholder="Filter by Manufacturer" 
+										hx-post="/detail.html"
+										hx-trigger="keyup changed delay:500ms"
+										hx-target="#search-results"
+										placeholder="Search..."/>
+								</Th>
+							</Tr>
+						</thead>
+						<tbody id="search-results">	
+							{% include 'table_content.html' %}
+						</tbody>
+					</table>
+					</form>
+				</div>	
+			</div>
+		</div>
+	</div>
+
+	<div style="margin-top: 2rem;"></div>
+	<footer class="bg-gray-900">	
+		<div class="container max-w-6xl mx-auto flex items-center px-2 py-8">
+			<div class="w-full mx-auto flex flex-wrap items-center">
+				<div class="flex w-full md:w-1/2 justify-center md:justify-start text-white font-extrabold">
+				</div>
+				<div class="flex w-full pt-2 content-center justify-between md:w-1/2 md:justify-end">
+					<ul class="list-reset flex justify-center flex-1 md:flex-none items-center">
+						<li class="mr-2">
+							<a class="inline-block text-gray-300 no-underline hover:text-gray-200 hover:underline py-2 px-2" href="data.html">Data</a>
+						</li>
+						<li class="mr-2">
+							<a class="inline-block text-gray-300 no-underline hover:text-gray-200 hover:underline py-2 px-2" href="team.html">Team</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+</body>
+</html>

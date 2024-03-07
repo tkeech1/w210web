@@ -1,0 +1,8 @@
+{% for item in items %}
+<TR class="even:bg-gray-100 odd:bg-white">
+    <TD class="px-6 py-2 font-medium hover:underline w-1/12 border text-nowrap"><a href="drug.html?id={{item.ndc}}">{{item.ndc}}</a></TD>
+    <TD class="px-6 py-2 font-medium w-1/12 border text-nowrap">{{item.shortage}}</TD>
+    <TD class="px-6 py-2 font-medium w-6/12 border text-wrap">{{item.generic_name}}</TD>
+    <TD class="px-6 py-2 font-medium w-4/12 border text-nowrap">{{item.manufacturer}}</TD>
+</TR>
+{% endfor %}
