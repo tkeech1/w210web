@@ -1,14 +1,13 @@
 TODO
 * Vernon photo
-* AWS deployment
 * Tableau
     * Latest drugs on shortage from FDA
     * Shortage totals by category - allows you to filter by category
-* sql injection
+* DONE - prepared statements
+* DONE - AWS deployment
 * DONE - drug details
     * DONE - shortage history graphic on drug detail
     * DONE - drug substitutes
-
 
 Initial Requirements
 - COMPLETE - Dashboard to connect to API to get information about the drug or prediction

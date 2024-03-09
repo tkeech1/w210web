@@ -78,22 +78,27 @@ async def detail_post(request: Request,
     query = "SELECT * FROM prediction_data "
     where_clauses = []
     where_clause = ''
+    params = []
 
     if ndc is not None and ndc != '':
-        where_clauses.append(f"NDC like '{ndc}%'")
+        where_clauses.append(f" NDC like ? ")
+        params.append(str(ndc)+'%')
     if probability is not None and probability != '':
-        where_clauses.append(f"probability >= {probability}")
+        where_clauses.append(f" probability >= ? ")
+        params.append(probability)
     if generic_name is not None and generic_name != '':
-        where_clauses.append(f"lower(brand_name) like '%{generic_name.lower()}%'")
+        where_clauses.append(f" lower(brand_name) like ? ")
+        params.append('%' + generic_name.lower())
     if manufacturer is not None and manufacturer != '':
-        where_clauses.append(f"lower(labeler_name) like '%{manufacturer.lower()}%'")
+        where_clauses.append(f" lower(labeler_name) like ? ")
+        params.append('%' + manufacturer.lower() + '%')
     if len(where_clauses) > 0:
         where_clause += ' where '
         for w in where_clauses:
             where_clause += w + ' AND '
         where_clause = where_clause[:len(where_clause) - 5]
     
-    rows = duckdb.sql(query + where_clause + ' order by probability desc LIMIT 10;').df()        
+    rows = duckdb.execute(query + where_clause + ' order by probability desc LIMIT 10;', params).df()        
 
     return templates.TemplateResponse(request=request, name="table_content.html", context={"items": rows})        
 
@@ -104,16 +109,16 @@ async def download(request: Request):
 @app.get("/drug.html", response_class=HTMLResponse)
 async def drug(request: Request, id: str | None = None):
 
-    rows = duckdb.sql(f"SELECT * FROM prediction_data where NDC = '{id}' LIMIT 1;").df()
-    shortage_data = duckdb.sql(f"SELECT * FROM shortage_ts where NDC = '{id}';").df()
-    ais = duckdb.sql(f"SELECT name, strength FROM active_ingredients where NDC = '{id}';").fetchall()
+    rows = duckdb.execute(f"SELECT * FROM prediction_data where NDC = ? LIMIT 1;", [id]).df()
+    shortage_data = duckdb.execute(f"SELECT * FROM shortage_ts where NDC = ?;", [id]).df()
+    ais = duckdb.execute(f"SELECT name, strength FROM active_ingredients where NDC = ?;", [id]).fetchall()
 
     similar_drugs = pd.DataFrame()
     active_ingredient_list = []
 
     for ai in ais:
         active_ingredient_list.append((ai[0],ai[1]))
-        tmp_df = duckdb.sql(f"""
+        tmp_df = duckdb.execute(f"""
                                SELECT * 
                                FROM 
                                 prediction_data
@@ -122,13 +127,13 @@ async def drug(request: Request, id: str | None = None):
                                         prediction_data.ndc = active_ingredients.ndc
                                     )
                                WHERE 
-                                active_ingredients.name = '{ai[0]}' 
-                                and active_ingredients.strength = '{ai[1]}'
-                                and prediction_data.ndc != '{id}'
+                                active_ingredients.name = $1
+                                and active_ingredients.strength = $2
+                                and prediction_data.ndc != $3
                                ORDER BY prediction_data.probability desc
                                LIMIT 10
                                 ;
-                               """).df()
+                               """, [ai[0], ai[1], id]).df()
         similar_drugs = pd.concat([similar_drugs, tmp_df], ignore_index=True)
 
     return templates.TemplateResponse(request=request, name="drug.html", 
