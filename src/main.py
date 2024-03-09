@@ -6,27 +6,43 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 import duckdb
+import glob
+import pandas as pd
 
-fda_data = None
+prediction_data = None
+shortage_ts = None
+active_ingredients = None
 
 logger = logging.getLogger(__name__)
 
 # Running Lifetime events - https://fastapi.tiangolo.com/advanced/events/
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global fda_data
-    fda_data = duckdb.read_csv("data/FDA_data.csv")
+    global prediction_data
+    global shortage_ts
+    global active_ingredients
+    results_glob = glob.glob(f'data/full_results.parquet')
+    shortage_ts_glob = glob.glob(f'data/shortages_month.parquet')
+    active_ingredients_glob = glob.glob(f'data/act_ing_comp.parquet')
+    prediction_data = duckdb.read_parquet(results_glob)
+    shortage_ts = duckdb.read_parquet(shortage_ts_glob)
+    active_ingredients = duckdb.read_parquet(active_ingredients_glob)
+    # prediction_data = duckdb.read_parquet('http://w210capstone.s3-website-us-east-1.amazonaws.com/full_results.parquet')
+    # shortage_ts = duckdb.read_parquet('http://w210capstone.s3-website-us-east-1.amazonaws.com/shortages_month.parquet')
+    # active_ingredients = duckdb.read_parquet('http://w210capstone.s3-website-us-east-1.amazonaws.com/act_ing_comp.parquet')
     logger.debug("loading data finished") 
     yield
-    fda_data = None
+    prediction_data = None
+    shortage_ts = None
+    active_ingredients = None
 
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="static/templates")
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+def read_root(request: Request):
+    return templates.TemplateResponse(request=request, name="index.html")
 
 @app.get("/index.html", response_class=HTMLResponse)
 async def index(request: Request):
@@ -46,60 +62,80 @@ async def dashboard(request: Request):
 
 @app.get("/detail.html", response_class=HTMLResponse)
 async def detail_get(request: Request, hx_request: Annotated[str | None, Header()] = None):
-    rows = duckdb.sql('SELECT * FROM fda_data LIMIT 50;').fetchall()
-    items = []
-
-    for i in rows[:10]:
-        an_item = dict(ndc=i[0],shortage=i[1],generic_name=i[2],manufacturer=i[3])
-        items.append(an_item)
-    return templates.TemplateResponse(request=request, name="detail.html", context={"items": items})
+    rows = duckdb.sql('SELECT * FROM prediction_data order by probability desc LIMIT 10;').df()
+    
+    return templates.TemplateResponse(request=request, name="detail.html", context={"items": rows})
 
 @app.post("/detail.html", response_class=HTMLResponse)
 async def detail_post(request: Request, 
                       ndc: Annotated[str | None, Form()] = None, 
-                      shortage_status: Annotated[str | None, Form()] = None, 
+                      probability: Annotated[str | None, Form()] = None, 
                       generic_name: Annotated[str | None, Form()] = None, 
                       manufacturer: Annotated[str | None, Form()] = None, 
                       hx_request: Annotated[str | None, Header()] = None):
-    items = []
     rows=[]
 
-    query = "SELECT * FROM fda_data"
+    query = "SELECT * FROM prediction_data "
     where_clauses = []
     where_clause = ''
 
     if ndc is not None and ndc != '':
         where_clauses.append(f"NDC like '{ndc}%'")
-    if shortage_status is not None and shortage_status != '':
-        where_clauses.append(f"lower(Shortage_Status) like '%{shortage_status.lower()}%'")
+    if probability is not None and probability != '':
+        where_clauses.append(f"probability >= {probability}")
     if generic_name is not None and generic_name != '':
-        where_clauses.append(f"lower(Generic_name) like '%{generic_name.lower()}%'")
+        where_clauses.append(f"lower(brand_name) like '%{generic_name.lower()}%'")
     if manufacturer is not None and manufacturer != '':
-        where_clauses.append(f"lower(Company) like '%{manufacturer.lower()}%'")
+        where_clauses.append(f"lower(labeler_name) like '%{manufacturer.lower()}%'")
     if len(where_clauses) > 0:
         where_clause += ' where '
         for w in where_clauses:
             where_clause += w + ' AND '
         where_clause = where_clause[:len(where_clause) - 5]
     
-    rows = duckdb.sql(query + where_clause + ' LIMIT 50;').fetchall()        
+    rows = duckdb.sql(query + where_clause + ' order by probability desc LIMIT 10;').df()        
 
-    for i in rows[:10]:
-        an_item = dict(ndc=i[0],shortage=i[1],generic_name=i[2],manufacturer=i[3])
-        items.append(an_item)    
-    return templates.TemplateResponse(request=request, name="table_content.html", context={"items": items})        
+    return templates.TemplateResponse(request=request, name="table_content.html", context={"items": rows})        
 
 @app.get("/download.html", response_class=FileResponse)
 async def download(request: Request):
-    return FileResponse('FDA_data.csv', media_type='application/octet-stream', filename='shortage.csv')
+    return FileResponse('data/full_results.parquet', media_type='application/octet-stream', filename='shortage.parquet')
 
 @app.get("/drug.html", response_class=HTMLResponse)
 async def drug(request: Request, id: str | None = None):
 
-    rows = duckdb.sql(f"SELECT * FROM fda_data where NDC = '{id}' LIMIT 1;").fetchall()
-    item = {}
+    rows = duckdb.sql(f"SELECT * FROM prediction_data where NDC = '{id}' LIMIT 1;").df()
+    shortage_data = duckdb.sql(f"SELECT * FROM shortage_ts where NDC = '{id}';").df()
+    ais = duckdb.sql(f"SELECT name, strength FROM active_ingredients where NDC = '{id}';").fetchall()
 
-    for i in rows:
-        item = dict(ndc=i[0],shortage=i[1],generic_name=i[2],manufacturer=i[3],
-                    presentation=i[5],type=i[6], availability=i[8],short_reason=i[11])
-    return templates.TemplateResponse(request=request, name="drug.html", context={"item": item})
+    similar_drugs = pd.DataFrame()
+    active_ingredient_list = []
+
+    for ai in ais:
+        active_ingredient_list.append((ai[0],ai[1]))
+        tmp_df = duckdb.sql(f"""
+                               SELECT * 
+                               FROM 
+                                prediction_data
+                                left outer join active_ingredients  
+                                    on (
+                                        prediction_data.ndc = active_ingredients.ndc
+                                    )
+                               WHERE 
+                                active_ingredients.name = '{ai[0]}' 
+                                and active_ingredients.strength = '{ai[1]}'
+                                and prediction_data.ndc != '{id}'
+                               ORDER BY prediction_data.probability desc
+                               LIMIT 10
+                                ;
+                               """).df()
+        similar_drugs = pd.concat([similar_drugs, tmp_df], ignore_index=True)
+
+    return templates.TemplateResponse(request=request, name="drug.html", 
+                                      context={"items": rows, 
+                                               "shortage_data": shortage_data, 
+                                               "active_ingredients": active_ingredient_list, 
+                                               "ndc": id, 
+                                               "similar_drugs": similar_drugs
+                                               })
+

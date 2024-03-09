@@ -47,7 +47,7 @@
 
 			<div class="flex-col mt-8 mb-2 mt-4 bg-white ml-4 w-4/5 rounded-md">
 				<!--<div class="pl-4 text-xl text-gray-500 pt-4" id="dsa">Drug Detail</div>-->
-				<div class="pl-4 text-sm text-gray-500 justify-start pt-4">An explanation of what this page shows...</div>
+				<div class="pl-4 text-sm text-gray-500 justify-start pt-4">This page displays NDC information along with the predicted probability of shortage in the next 4 weeks.</div>
 				<div class="pl-4 justify-start pt-4 inline-block hover:text-gray-600 hover:underline text-sm"><a href="download.html">Download Full Results</a></div>	
 				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">
 					<form>
@@ -55,8 +55,8 @@
 						<thead class="border-b font-medium bg-gray-300">
 							<tr>
 								<th scope="col" class="px-6 py-1">NDC</th>
-								<th scope="col" class="px-6 py-1">Shortage Status</th>
-								<th scope="col" class="px-6 py-1">Generic Name</th>
+								<th scope="col" class="px-6 py-1">Shortage Probability</th>
+								<th scope="col" class="px-6 py-1">Brand Name</th>
 								<th scope="col" class="px-6 py-1">Manufacturer</th>
 							</tr>
 							<Tr>
@@ -67,7 +67,7 @@
 										hx-target="#search-results"
 										placeholder="Search..."/></Th>
 								<Th class="whitespace-nowrap px-6 py-1 font-medium">
-									<input type="text" name="shortage_status" class="border rounded" id="filter_ndc" placeholder="Filter by Shortage Status" 
+									<input type="text" name="probability" class="border rounded" id="filter_ndc" placeholder="Filter by Probability (>=)" 
 										hx-post="/detail.html"
 										hx-trigger="keyup changed delay:500ms"
 										hx-target="#search-results"

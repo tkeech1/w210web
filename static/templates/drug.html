@@ -30,7 +30,7 @@
 					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="dashboard.html">Dashboard</a>
 				  </li>
 				  <li class="mr-2">
-					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="detail.html">Detail</a>
+					<a class="inline-block text-gray-400 no-underline hover:text-gray-200 hover:text-underline py-2 px-2" href="detail.html">Drug Details</a>
 				</ul>
 			</div>
         </div>
@@ -47,42 +47,40 @@
 			<div class="flex-col mt-8 mb-2 mt-4 bg-white ml-4 w-4/5 rounded-md">
 				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">
 					<form>
-					<table class="table-auto min-w-full text-left text-sm font-light">						
-						<tbody id="search-results">	
-							<TR class="border-b divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">NDC</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.ndc}}</TD>
-							</TR>
-							<TR class="border-b divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">Shortage Status</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.shortage}}</TD>
-							</TR>
-							<TR class="border-b divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">Generic Name</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.generic_name}}</TD>
-							</TR>
-							<TR class="border-b divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">Company</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.manufacturer}}</TD>
-							</TR>
-							<TR class="border-b divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">Presentation</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.presentation}}</TD>
-							</TR>
-							<TR class="border-b divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">Type</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.type}}</TD>
-							</TR>
-							<TR class="border-b divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">Availability</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.availability}}</TD>
-							</TR>
-							<TR class="divide-x dark:border-neutral-500">
-								<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold">Short Reason</TD>
-								<TD class="whitespace-nowrap px-6 py-2 font-medium">{{item.short_reason}}</TD>
-							</TR>
-						</tbody>
-					</table>
+						{% for _,item in items.iterrows() %}
+							<table class="table-fixed min-w-full text-left text-sm font-light">						
+								<tbody id="search-results">	
+									<TR class="border-b divide-x dark:border-neutral-500">
+										<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold w-2/12">NDC</TD>
+										<TD class="whitespace-nowrap px-6 py-2 font-medium w-10/12">{{item.ndc}}</TD>
+									</TR>
+									<TR class="border-b divide-x dark:border-neutral-500">
+										<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold w-2/12">Shortage Probability</TD>
+										<TD class="whitespace-nowrap px-6 py-2 font-medium w-10/12">{{item.probability}}</TD>
+									</TR>
+									<TR class="border-b divide-x dark:border-neutral-500">
+										<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold w-2/12">Brand Name</TD>
+										<TD class="whitespace-nowrap px-6 py-2 font-medium w-10/12">{{item.brand_name}}</TD>
+									</TR>
+									<TR class="border-b divide-x dark:border-neutral-500">
+										<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold w-2/12">Manufacturer</TD>
+										<TD class="whitespace-nowrap px-6 py-2 font-medium w-10/12">{{item.labeler_name}}</TD>
+									</TR>
+									<TR class="border-b divide-x dark:border-neutral-500">
+										<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold w-2/12">Marketing Category</TD>
+										<TD class="whitespace-nowrap px-6 py-2 font-medium w-10/12">{{item.marketing_category}}</TD>
+									</TR>
+									<TR class="border-b divide-x dark:border-neutral-500">
+										<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold w-2/12">Product Type</TD>
+										<TD class="whitespace-nowrap px-6 py-2 font-medium w-10/12">{{item.product_type}}</TD>
+									</TR>
+									<TR class="divide-x dark:border-neutral-500">
+										<TD class="whitespace-nowrap px-6 py-2 font-medium font-bold w-2/12">Application Number</TD>
+										<TD class="whitespace-nowrap px-6 py-2 font-medium w-10/12">{{item.application_number}}</TD>
+									</TR>
+								</tbody>
+							</table>
+						{% endfor %}
 					</form>
 				</div>	
 			</div>
@@ -95,9 +93,29 @@
 
 	<div class="flex">
 		<div class="flex-col ml-10 w-full flex">		
-
 			<div class="flex-col mt-8 mb-2 mt-4 bg-white ml-4 w-4/5 rounded-md">
-				<div class="pl-4 text-sm text-gray-500 justify-start pt-4">Display a graphic that shows the shortage history over time?</div>
+				<div class="flex-col w-1/2 p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">
+					<table class="table-fixed min-w-full text-left text-sm font-light">						
+						<thead class="border-b font-medium bg-gray-300">
+							<tr>
+								<th scope="col" class="px-6 py-1">Month</th>
+								<th scope="col" class="px-6 py-1">Shortage</th>
+							</tr>
+						</thead>
+						<tbody id="search-results">	
+							{% for _,item in shortage_data.iterrows() %}
+								<tr class="even:bg-gray-100 odd:bg-white">
+									<td class="px-6 py-2 font-medium w-1/12 border text-nowrap">{{item.date.strftime("%m-%d-%Y")}}</td>
+									{% if item.shortage_indicator == 1: %}
+										<td class="px-6 py-2 font-medium w-1/12 border text-nowrap bg-red-200">Shortage</td>
+									{% else: %}
+										<td class="px-6 py-2 font-medium w-1/12 border text-nowrap bg-green-200"></td>
+									{% endif %}
+								</tr>								
+							{% endfor %}
+						</tbody>					
+					</table>	
+				</div>			
 				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">						
 				</div>					
 			</div>
@@ -105,15 +123,41 @@
 	</div>
 
 	<div class="ml-14" style="padding-top: 2rem;">
-		<h1 class="font-bold break-normal text-2xl">Substitutes</h1>
+		<h1 class="font-bold break-normal text-2xl">Similar Drugs</h1>
 	</div>
 
 	<div class="flex">
 		<div class="flex-col ml-10 w-full flex">		
 
 			<div class="flex-col mt-8 mb-2 mt-4 bg-white ml-4 w-4/5 rounded-md">
-				<div class="pl-4 text-sm text-gray-500 justify-start pt-4">Display a list of substitutes for this drug?</div>
+				<div class="pl-4 text-sm start-jusitfy pt-4">Active Ingredients<br>
+					<ul class="list-disc pl-4 pt-2 text-gray-500 ">
+						{% for item in active_ingredients %}
+							<li>{{item[0]}} - {{item[1]}}</li>
+						{% endfor %}					 
+					</ul>					
+				</div>
 				<div class="flex-col w-full p-8 md:p-24 text-xl md:text-2xl text-gray-800 leading-normal items-center shrink-0 grow-1 rounded" style="font-family:Georgia,serif; padding: 1rem;">						
+					<table class="table-fixed min-w-full text-left text-sm font-light">						
+						<thead class="border-b font-medium bg-gray-300">
+							<tr>
+								<th scope="col" class="px-6 py-1">NDC</th>
+								<th scope="col" class="px-6 py-1">Shortage Probability</th>
+								<th scope="col" class="px-6 py-1">Brand Name</th>
+								<th scope="col" class="px-6 py-1">Manufacturer</th>
+							</tr>
+						</thead>
+						<tbody id="search-results">	
+							{% for _,item in similar_drugs.iterrows() %}
+								<TR class="even:bg-gray-100 odd:bg-white">
+									<TD class="px-6 py-2 font-medium hover:underline w-1/12 border text-nowrap"><a href="drug.html?id={{item.ndc}}">{{item.ndc}}</a></TD>
+									<TD class="px-6 py-2 font-medium w-1/12 border text-nowrap">{{item.probability|round(4)}}</TD>
+									<TD class="px-6 py-2 font-medium w-6/12 border text-wrap">{{item.brand_name}}</TD>
+									<TD class="px-6 py-2 font-medium w-4/12 border text-nowrap">{{item.labeler_name}}</TD>
+								</TR>							
+							{% endfor %}
+						</tbody>					
+					</table>
 				</div>					
 			</div>
 		</div>

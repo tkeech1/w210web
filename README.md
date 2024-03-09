@@ -1,11 +1,14 @@
 TODO
 * Vernon photo
-* pagination on drugs page
-* amazon deployment
-* tableau dashboards
-* drug details
-    * shortage history graphic on drug detail
-    * drug substitutes
+* AWS deployment
+* Tableau
+    * Latest drugs on shortage from FDA
+    * Shortage totals by category - allows you to filter by category
+* sql injection
+* DONE - drug details
+    * DONE - shortage history graphic on drug detail
+    * DONE - drug substitutes
+
 
 Initial Requirements
 - COMPLETE - Dashboard to connect to API to get information about the drug or prediction
